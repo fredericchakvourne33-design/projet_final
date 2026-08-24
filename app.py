@@ -1,9 +1,6 @@
-# ============================================================
-# app.py
-# Système intelligent de surveillance de la dracunculose — Tchad
-# Tableau de bord Streamlit : prévision 2026 par province,
+# Système intelligent de surveillance de la maladie de ver de guinée — Tchad
+# Tableau de bord : prévision 2026 par province,
 # districts et villages à risque.
-# ============================================================
 
 from datetime import date
 
@@ -20,11 +17,7 @@ from utils.data import (
     ordonner_mois,
     COLONNES_FACTEURS,
 )
-
-
-# ============================================================
 # Configuration
-# ============================================================
 
 st.set_page_config(
     page_title="Surveillance Dracunculose - Tchad",
@@ -35,11 +28,7 @@ st.set_page_config(
 
 NUM_BULLETIN = "AIGW/TD-2026"
 
-# ------------------------------------------------------------
 # Palette — identité visuelle inspirée des bulletins
-# épidémiologiques officiels (cohérente avec le rapport et le
-# tableau de bord déjà livrés sur ce projet).
-# ------------------------------------------------------------
 TEAL = "#0E4B47"
 TEAL_CLAIR = "#DCEAE8"
 OCRE = "#C68A2E"
@@ -49,10 +38,7 @@ ENCRE = "#1C2B27"
 FOND = "#F7F5F0"
 MUTEE = "#66716B"
 
-
-# ============================================================
 # CSS
-# ============================================================
 
 st.markdown(
 f"""
@@ -225,9 +211,8 @@ def facteurs_dominants_texte(ligne, seuil=0.20, top_n=2):
     return " · ".join(parties)
 
 
-# ============================================================
-# En-tête façon bulletin épidémiologique
-# ============================================================
+
+#  bulletin épidémiologique
 
 st.markdown(
 f"""
@@ -243,10 +228,7 @@ f"""
     unsafe_allow_html=True,
 )
 
-
-# ============================================================
 # Chargement
-# ============================================================
 
 df_provinces = preparer_predictions(charger_predictions())
 df_provinces = ordonner_mois(df_provinces)
@@ -265,9 +247,8 @@ if df_provinces.empty:
     st.stop()
 
 
-# ============================================================
 # SIDEBAR — filtres
-# ============================================================
+
 
 st.sidebar.markdown("### 📂 Données")
 st.sidebar.markdown("**Année**")
@@ -293,9 +274,7 @@ df_vill_filtre = (
 )
 
 
-# ============================================================
-# SECTION 0 — Indicateurs clés
-# ============================================================
+#  Indicateurs clés
 
 total_infections = int(df_prov_filtre["Infections_prevues"].sum()) if "Infections_prevues" in df_prov_filtre.columns else 0
 nb_provinces = df_prov_filtre["Province"].nunique() if "Province" in df_prov_filtre.columns else 0
@@ -314,10 +293,8 @@ for col, (label, valeur) in zip(colonnes, colonnes_kpi):
     with col:
         carte_kpi(label, valeur)
 
+#  Évolution / répartition par province
 
-# ============================================================
-# SECTION 1 — Évolution / répartition par province
-# ============================================================
 
 entete_section("01", "Volume prévu par province — 2026")
 
@@ -362,9 +339,8 @@ with st.expander("Tableau détaillé par province"):
     st.dataframe(tab, use_container_width=True, hide_index=True)
 
 
-# ============================================================
-# SECTION 2 — Districts à risque 2026
-# ============================================================
+
+# Districts à risque 2026
 
 entete_section("02", "Districts à risque — 2026")
 
@@ -440,10 +416,7 @@ else:
         "districts les plus exposés dans la sélection courante."
     )
 
-
-# ============================================================
-# SECTION 3 — Villages à risque 2026
-# ============================================================
+# Villages à risque 2026
 
 entete_section("03", "Villages à risque — 2026")
 
@@ -500,10 +473,7 @@ else:
         "certitude, en particulier pour les zones sans historique."
     )
 
-
-# ============================================================
 # PIED DE PAGE
-# ============================================================
 
 st.markdown(
 f"""
